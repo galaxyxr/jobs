@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人名片 | 求职简历</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ========== 全屏固定背景 ========== -->
+  <div class="fixed-bg"></div>
+
+  <!-- ========== 顶部固定导航 bar（滚动后出现） ========== -->
+  <header class="top-bar" id="top-bar">
+    <div class="top-bar-inner">
+      <div class="top-bar-avatar-wrapper">
+        <img
+          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face"
+          alt="头像"
+          class="top-bar-avatar"
+        >
+      </div>
+      <span class="top-bar-name">张同学</span>
+    </div>
+  </header>
+
+  <!-- ========== 右侧导航指示器 ========== -->
+  <nav class="nav-dots">
+    <a href="#hero"    class="nav-dot active" data-section="hero"    data-label="首页"></a>
+    <a href="#campus"  class="nav-dot"        data-section="campus"  data-label="校园经历"></a>
+    <a href="#work"    class="nav-dot"        data-section="work"    data-label="工作经历"></a>
+    <a href="#life"    class="nav-dot"        data-section="life"    data-label="生活记录"></a>
+    <a href="#contact" class="nav-dot"        data-section="contact" data-label="联系我"></a>
+  </nav>
+
+  <!-- ========== 模态弹窗 ========== -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-container" id="modal-container">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       首屏 Hero — 正常滚动，不参与卡片堆叠
+       ============================================================ -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-avatar-wrapper" id="hero-avatar">
+        <div class="hero-avatar-ring"></div>
+        <img
+          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face"
+          alt="头像"
+          class="hero-avatar"
+        >
+      </div>
+      <h1 class="hero-greeting" id="hero-greeting">
+        <span class="hero-wave">👋</span> Hi，我是
+        <span class="hero-name">张同学</span>
+      </h1>
+      <p class="hero-tagline" id="hero-tagline">
+        计算机科学与技术 · 2024届毕业生<br>
+        热爱前端开发与用户体验设计
+      </p>
+      <p class="hero-subtitle" id="hero-subtitle">「 用代码构建有温度的产品 」</p>
+      <div class="hero-cta" id="hero-cta">
+        <button class="btn btn-primary" onclick="scrollToSection('campus')">了解我</button>
+        <button class="btn btn-outline" onclick="scrollToSection('contact')">联系我</button>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span>向下滚动探索</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       卡片堆叠区 — 每张卡片 sticky 在不同 top 偏移
+       后面的卡片 z-index 更高，从底部滑入覆盖前面的
+       ============================================================ -->
+  <div class="cards-stage">
+
+    <!-- ====== 卡片 1：校园经历 ====== -->
+    <div class="stack-card campus-card" id="campus">
+      <!-- peek 条：被覆盖时露出的头部 -->
+      <div class="card-peek campus-peek">
+        <span class="peek-icon">🎓</span>
+        <span class="peek-title">校园经历</span>
+        <span class="peek-hint">点击展开 ↴</span>
+      </div>
+      <!-- 卡片主体 -->
+      <div class="card-body">
+        <div class="split-layout">
+          <div class="panel-left">
+            <div class="section-badge campus-badge">Campus</div>
+            <div class="section-icon">🎓</div>
+            <h2 class="section-title">校园经历</h2>
+            <p class="section-desc">四年大学时光<br>每一段经历都值得铭记</p>
+            <div class="section-decoration">
+              <span class="deco-line campus-line"></span>
+              <span class="deco-dot campus-dot"></span>
+            </div>
+          </div>
+          <div class="panel-right">
+            <div class="timeline">
+              <div class="timeline-item" data-modal="cert-1">
+                <div class="timeline-marker">
+                  <span class="marker-dot campus-marker"></span>
+                  <span class="marker-line campus-marker-line"></span>
+                </div>
+                <div class="timeline-card">
+                  <span class="timeline-year">2020.09</span>
+                  <h3>🎒 入学录取</h3>
+                  <p>XX大学 · 计算机科学与技术专业</p>
+                  <span class="timeline-tag campus-tag">点击查看录取通知书</span>
+                </div>
+              </div>
+              <div class="timeline-item" data-modal="cert-2">
+                <div class="timeline-marker">
+                  <span class="marker-dot campus-marker"></span>
+                  <span class="marker-line campus-marker-line"></span>
+                </div>
+                <div class="timeline-card">
+                  <span class="timeline-year">2021.06</span>
+                  <h3>🏆 全国大学生数学建模竞赛</h3>
+                  <p>省级一等奖 · 团队队长</p>
+                  <span class="timeline-tag campus-tag">点击查看获奖证书</span>
+                </div>
+              </div>
+              <div class="timeline-item" data-modal="cert-3">
+                <div class="timeline-marker">
+                  <span class="marker-dot campus-marker"></span>
+                  <span class="marker-line campus-marker-line"></span>
+                </div>
+                <div class="timeline-card">
+                  <span class="timeline-year">2022.09</span>
+                  <h3>🌍 国际交换生</h3>
+                  <p>新加坡国立大学 · 一学期交流</p>
+                  <span class="timeline-tag campus-tag">点击查看成绩单</span>
+                </div>
+              </div>
+              <div class="timeline-item" data-modal="cert-4">
+                <div class="timeline-marker">
+                  <span class="marker-dot campus-marker end-dot"></span>
+                </div>
+                <div class="timeline-card">
+                  <span class="timeline-year">2024.06</span>
+                  <h3>🎓 本科毕业</h3>
+                  <p>GPA 3.8/4.0 · 优秀毕业生</p>
+                  <span class="timeline-tag campus-tag">点击查看学位证书</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== 卡片 2：工作经历 ====== -->
+    <div class="stack-card work-card" id="work">
+      <div class="card-peek work-peek">
+        <span class="peek-icon">💼</span>
+        <span class="peek-title">工作经历</span>
+        <span class="peek-hint">点击展开 ↴</span>
+      </div>
+      <div class="card-body">
+        <div class="split-layout">
+          <div class="panel-left">
+            <div class="section-badge work-badge">Career</div>
+            <div class="section-icon">💼</div>
+            <h2 class="section-title">工作经历</h2>
+            <p class="section-desc">从实习生到职场人<br>每一步都在成长</p>
+            <div class="section-decoration">
+              <span class="deco-line work-line"></span>
+              <span class="deco-dot work-dot"></span>
+            </div>
+          </div>
+          <div class="panel-right">
+            <div class="timeline">
+              <div class="timeline-item" data-modal="work-1">
+                <div class="timeline-marker">
+                  <span class="marker-dot work-marker"></span>
+                  <span class="marker-line work-marker-line"></span>
+                </div>
+                <div class="timeline-card">
+                  <span class="timeline-year">2023.07 - 2023.12</span>
+                  <h3>🔷 字节跳动 · 前端开发实习生</h3>
+                  <p>TikTok 电商团队 · React/TypeScript</p>
+                  <span class="timeline-tag work-tag">🎬 点击查看公司介绍视频</span>
+                </div>
+              </div>
+              <div class="timeline-item" data-modal="work-2">
+                <div class="timeline-marker">
+                  <span class="marker-dot work-marker end-dot"></span>
+                </div>
+                <div class="timeline-card">
+                  <span class="timeline-year">2024.03 - 至今</span>
+                  <h3>🔶 阿里巴巴 · 前端开发工程师</h3>
+                  <p>淘宝事业部 · Next.js/Node.js</p>
+                  <span class="timeline-tag work-tag">🎬 点击查看公司介绍视频</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== 卡片 3：生活记录 ====== -->
+    <div class="stack-card life-card" id="life">
+      <div class="card-peek life-peek">
+        <span class="peek-icon">🌿</span>
+        <span class="peek-title">生活记录</span>
+        <span class="peek-hint">点击展开 ↴</span>
+      </div>
+      <div class="card-body">
+        <div class="split-layout">
+          <div class="panel-left">
+            <div class="section-badge life-badge">Life</div>
+            <div class="section-icon">🌿</div>
+            <h2 class="section-title">生活记录</h2>
+            <p class="section-desc">代码之外<br>还有诗和远方</p>
+            <div class="section-decoration">
+              <span class="deco-line life-line"></span>
+              <span class="deco-dot life-dot"></span>
+            </div>
+          </div>
+          <div class="panel-right">
+            <div class="life-grid">
+              <div class="life-category">
+                <h3 class="life-cat-title">📷 摄影作品</h3>
+                <div class="photo-grid">
+                  <div class="photo-card" data-modal="photo-1">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop" alt="山景">
+                    <span class="photo-label">川西 · 贡嘎雪山</span>
+                  </div>
+                  <div class="photo-card" data-modal="photo-2">
+                    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&h=400&fit=crop" alt="星空">
+                    <span class="photo-label">西藏 · 纳木错星空</span>
+                  </div>
+                  <div class="photo-card" data-modal="photo-3">
+                    <img src="https://images.unsplash.com/photo-1528164344705-47542687000d?w=600&h=400&fit=crop" alt="城市">
+                    <span class="photo-label">上海 · 外滩夜景</span>
+                  </div>
+                </div>
+              </div>
+              <div class="life-category">
+                <h3 class="life-cat-title">📚 最近在读</h3>
+                <div class="reading-grid">
+                  <div class="reading-card">
+                    <div class="book-cover">
+                      <span class="book-emoji">📖</span>
+                      <span class="book-placeholder">代码整洁之道</span>
+                    </div>
+                    <div class="book-info">
+                      <h4>代码整洁之道</h4>
+                      <p class="book-author">Robert C. Martin</p>
+                      <p class="book-note">"写代码如同写文章，清晰的表达比华丽的技巧更重要。"</p>
+                    </div>
+                  </div>
+                  <div class="reading-card">
+                    <div class="book-cover">
+                      <span class="book-emoji">📘</span>
+                      <span class="book-placeholder">设计中的设计</span>
+                    </div>
+                    <div class="book-info">
+                      <h4>设计中的设计</h4>
+                      <p class="book-author">原研哉</p>
+                      <p class="book-note">"设计不是装饰，而是发现问题并解决它的过程。"</p>
+                    </div>
+                  </div>
+                  <div class="reading-card">
+                    <div class="book-cover">
+                      <span class="book-emoji">📙</span>
+                      <span class="book-placeholder">人类简史</span>
+                    </div>
+                    <div class="book-info">
+                      <h4>人类简史</h4>
+                      <p class="book-author">尤瓦尔·赫拉利</p>
+                      <p class="book-note">"认知革命让人类学会了虚构故事，这是文明的开端。"</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /cards-stage -->
+
+  <!-- ============================================================
+       底部联系方式 — 正常滚动
+       ============================================================ -->
+  <section class="contact-section" id="contact">
+    <div class="contact-inner">
+      <h2 class="contact-title">期待与你相遇</h2>
+      <p class="contact-subtitle">如果你对我的经历感兴趣，欢迎随时联系</p>
+      <div class="contact-grid">
+        <a href="mailto:hello@example.com" class="contact-card">
+          <span class="contact-icon-wrap">✉️</span>
+          <span class="contact-label">邮箱</span>
+          <span class="contact-value">hello@example.com</span>
+        </a>
+        <a href="tel:+8613800000000" class="contact-card">
+          <span class="contact-icon-wrap">📱</span>
+          <span class="contact-label">电话</span>
+          <span class="contact-value">138-0000-0000</span>
+        </a>
+        <a href="https://github.com" target="_blank" class="contact-card">
+          <span class="contact-icon-wrap">💻</span>
+          <span class="contact-label">GitHub</span>
+          <span class="contact-value">github.com/zhangtongxue</span>
+        </a>
+        <a href="#" class="contact-card" onclick="downloadResume()">
+          <span class="contact-icon-wrap">📄</span>
+          <span class="contact-label">简历下载</span>
+          <span class="contact-value">点击下载 PDF</span>
+        </a>
+      </div>
+      <p class="footer-note">© 2024 张同学 · Made with ❤️</p>
+    </div>
+  </section>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
