@@ -162,6 +162,20 @@ body::before {
 }
 .avatar-hint-btn:hover .avatar-hint-tip { opacity: 1; }
 
+/* 🏷️ 提示气泡 */
+.bubble-toggle-tip {
+  position: absolute; left: calc(100% + 10px); top: 50%; transform: translateY(-50%);
+  background: rgba(0,0,0,0.82); color: #fff; font-size: .72rem;
+  padding: 7px 12px; border-radius: 10px;
+  white-space: nowrap; pointer-events: none;
+  opacity: 0; transition: opacity .25s;
+}
+.bubble-toggle-tip::before {
+  content: ''; position: absolute; right: 100%; top: 50%; transform: translateY(-50%);
+  border: 6px solid transparent; border-right-color: rgba(0,0,0,0.82);
+}
+.bubble-toggle:hover .bubble-toggle-tip { opacity: 1; }
+
 /* hero 动画元素由 JS 逐帧控制，不设 transition */
 #hero-avatar, #hero-hi, #hero-desc, #hero-quote, #hero-btns, #hero-bubbles, #scroll-hint,
 .bubble-toggle, .avatar-hint-btn {
@@ -240,13 +254,26 @@ body::before {
 }
 .bubble:hover .bubble-vote { opacity: 1; transform: translateY(0); }
 
-.bubble-vote b, .bubble-vote i {
+.bubble-vote b {
   font-style: normal; font-weight: 600; padding: 3px 10px; border-radius: 10px;
   cursor: pointer; transition: background .2s;
   background: rgba(255,255,255,0.15);
 }
 .bubble-vote b:hover { background: rgba(34,197,94,0.5); }
-.bubble-vote i:hover { background: rgba(239,68,68,0.5); }
+
+/* 弹幕 */
+.toast {
+  position: fixed; z-index: 9999; pointer-events: none;
+  font-size: .8rem; font-weight: 600;
+  color: #fff;
+  background: rgba(0,0,0,0.55);
+  padding: 6px 14px; border-radius: 12px;
+  animation: toastUp 1.5s ease-out forwards;
+}
+@keyframes toastUp {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-100px) scale(1.2); }
+}
 
 .scroll-down {
   position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
@@ -370,7 +397,8 @@ body::before {
 
 .tl-item:hover .tl-card { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.15); }
 
-.tl-card h4 { font-size: 1.02rem; font-weight: 600; margin-bottom: 2px; color: var(--txt); }
+.tl-card h4 { font-size: 1.02rem; font-weight: 600; margin-bottom: 2px; color: var(--txt); display: flex; align-items: center; gap: 8px; }
+.company-logo { width: 22px; height: 22px; border-radius: 4px; object-fit: contain; flex-shrink: 0; }
 .tl-card p { font-size: .86rem; color: var(--txt2); line-height: 1.6; }
 
 .tl-tag {
@@ -383,6 +411,8 @@ body::before {
 .work-video-btn:hover { background: rgba(138,163,139,0.4); color: #fff; }
 .work-video-note { font-size: .62rem !important; color: var(--txt2); margin-top: 8px; opacity: 0.7; }
 .tag-life   { background: var(--c-purple-l); color: #c4b8d4; }
+.tag-fulltime  { background: rgba(251,146,0,0.2); color: #fb9200; }
+.tag-intern    { background: rgba(34,197,94,0.2);  color: #22c55e; }
 
 /* ====== 生活模块 ====== */
 .life-sub { font-size: 1.06rem; font-weight: 600; color: var(--txt); margin-bottom: 12px; margin-top: 20px; }
@@ -514,37 +544,124 @@ body::before {
 }
 
 /* ============================================================
-   响应式
+   响应式 — 全面移动端适配
    ============================================================ */
+
+/* 手机横屏 / 小平板 */
 @media (max-width:768px) {
   body { cursor:auto; }
   .cursor-dot, .cursor-ring { display:none; }
 
-  .hero h1 { font-size:1.6rem; }
-  .hero-avatar-wrap { width:100px; height:100px; }
-  .sec-title { font-size:2rem; }
+  /* hero */
+  .hero { padding: 24px 20px; min-height: 100vh; }
+  .hero h1 { font-size: 1.35rem; }
+  .hero-desc { font-size: .88rem; }
+  .hero-quote { font-size: .82rem; }
+  .hero-avatar-wrap { width: 90px; height: 90px; }
+  .hero-inner { gap: 10px; }
+  .hero-btns { gap: 10px; }
+  .btn-fill, .btn-line { padding: 10px 24px; font-size: .85rem; }
+  .sec-title { font-size: 1.6rem; margin-bottom: 2rem; }
 
+  /* topbar */
+  .topbar { padding: 10px 16px; }
+  .topbar-avatar { width: 28px; height: 28px; }
+  .topbar-name { font-size: .85rem; }
+
+  /* 右侧导航 */
+  .side-nav { right: 8px; gap: 14px; }
+  .side-dot { width: 7px; height: 7px; }
+
+  /* 卡片区 — 取消 sticky，改为正常滚动 */
+  .cards-section { padding: 60px 0 100px; }
   .stack-card {
-    position:static !important;
-    transform:none !important; opacity:1 !important;
-    grid-template-columns: 1fr; gap: 32px;
+    position: static !important;
+    transform: none !important; opacity: 1 !important;
+    grid-template-columns: 1fr; gap: 24px;
+    height: auto; max-height: none;
+    padding: 1.5rem; margin-bottom: 1rem;
   }
   .card-left { position: static; }
+  .card-left h3 { font-size: 1.3rem; }
   .card-deco { justify-content: center; }
+  .card-icon { font-size: 1.8rem; }
+  .card-left > p { font-size: .85rem; }
+  .panel-right { padding-top: 0; }
 
-  .photo-row { grid-template-columns: repeat(2, 1fr); }
-  .carousel-card { width: 320px; max-height: 35vh; }
-  .contact-row { grid-template-columns: repeat(2,1fr); }
-  .side-nav { right: 12px; gap: 12px; }
-  .side-dot { width: 8px; height: 8px; }
-  .tl-year { width: 70px; font-size: .68rem; }
-  .bubbles { right: 24px; max-width: 280px; }
+  /* 时间轴 */
+  .tl-item { gap: 8px; }
+  .tl-year { width: 80px; font-size: .65rem; }
+  .tl-card { padding: 14px 16px; }
+  .tl-card h4 { font-size: .9rem; }
+  .tl-card p { font-size: .78rem; }
+  .tl-tag { font-size: .68rem; padding: 2px 8px; }
+  .tl-marker { width: 14px; }
+  .tl-dot { width: 10px; height: 10px; }
+
+  /* 照片 */
+  .photo-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .carousel-card { width: 260px; max-height: 32vh; }
+
+  /* 书籍 */
+  .reading-card, .book { flex-direction: row; gap: 12px; }
+  .book-cover { width: 50px; height: 68px; }
+  .book-cover span { font-size: 1.2rem; }
+  .book-info strong { font-size: .82rem; }
+  .book-info p { font-size: .76rem; margin-top: 2px; }
+
+  /* 联系 */
+  .contact { padding: 60px 20px; }
+  .contact h2 { font-size: 1.5rem; }
+  .contact-row { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .contact-card { padding: 18px 10px; }
+  .contact-card span { font-size: 1.2rem; }
+  .contact-card strong { font-size: .72rem; }
+  .contact-card small { font-size: .7rem; }
+
+  /* 标签 */
+  .bubbles { right: 8px; max-width: 240px; gap: 6px; }
+  .bubble { padding: 5px 10px; font-size: .72rem; }
+  .bubble-toggle, .avatar-hint-btn { width: 28px; height: 28px; font-size: .7rem; }
+  .bubble-toggle { left: calc(100% + 18px); bottom: 34px; }
+  .avatar-hint-btn { left: calc(100% + 18px); top: 20px; }
+  .avatar-hint-tip { font-size: .66rem; padding: 5px 10px; }
+
+  /* 弹窗 */
+  .modal-box { padding: 1.5rem; max-width: 94vw; }
+  .modal-body { padding: 12px 16px 28px; }
+  .modal-body h3 { font-size: 1.2rem; }
 }
 
+/* 小屏手机 */
 @media (max-width:480px) {
-  .hero-btns { flex-direction:column; width:100%; }
-  .btn-fill,.btn-line { width:100%; text-align:center; }
-  .photo-row { grid-template-columns: repeat(2, 1fr); }
-  .contact-row { grid-template-columns:1fr; }
-  .carousel-card { width: 260px; max-height: 30vh; }
+  .hero h1 { font-size: 1.2rem; }
+  .hero-desc { font-size: .82rem; }
+  .hero-quote { font-size: .76rem; }
+  .hero-avatar-wrap { width: 80px; height: 80px; }
+  .hero-btns { flex-direction: column; width: 80%; }
+  .btn-fill, .btn-line { width: 100%; text-align: center; }
+
+  .card-icon { font-size: 1.5rem; }
+  .card-left h3 { font-size: 1.15rem; }
+
+  .photo-row { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .contact-row { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .contact-card { padding: 14px 8px; }
+  .contact-card span { font-size: 1.1rem; }
+  .contact-card strong { font-size: .68rem; }
+  .contact-card small { font-size: .65rem; }
+
+  .carousel-card { width: 220px; max-height: 28vh; }
+  .tl-year { width: 66px; font-size: .6rem; }
+  .tl-card { padding: 12px 14px; }
+  .tl-card h4 { font-size: .85rem; }
+  .tl-card p { font-size: .74rem; }
+  .reading-card, .book { flex-direction: column; align-items: flex-start; }
+  .book-cover { margin: 0 auto; }
+  .book-info p { font-size: .72rem; }
+
+  .bubbles { right: 4px; max-width: 200px; }
+  .bubble-toggle { left: calc(100% + 12px); bottom: 30px; width: 24px; height: 24px; font-size: .6rem; }
+  .avatar-hint-btn { left: calc(100% + 12px); top: 16px; width: 24px; height: 24px; font-size: .6rem; }
+  .sec-title { font-size: 1.4rem; }
 }

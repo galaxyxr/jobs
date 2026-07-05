@@ -57,14 +57,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalBg   = modal ? modal.querySelector('.modal-bg') : null;
 
   const data = {
-    'photo-1': { title:'摄影作品', type:'gallery', img:'assets/作品.jpg' },
+    'photo-1': { title:'摄影作品', type:'gallery', img:'assets/作品1.jpg' },
     'photo-2': { title:'摄影作品', type:'gallery', img:'assets/作品2.jpg' },
     'photo-3': { title:'摄影作品', type:'gallery', img:'assets/作品3.jpg' },
     'photo-4': { title:'摄影作品', type:'gallery', img:'assets/作品4.jpg' },
-    'photo-5': { title:'摄影作品', type:'gallery', img:'assets/作品5.jpg' }
+    'photo-5': { title:'摄影作品', type:'gallery', img:'assets/作品5.jpg' },
+    'photo-6': { title:'摄影作品', type:'gallery', img:'assets/作品6.jpg' }
   };
 
-  const galleryKeys = ['photo-1', 'photo-2', 'photo-3', 'photo-4', 'photo-5'];
+  const galleryKeys = ['photo-1', 'photo-2', 'photo-3', 'photo-4', 'photo-5', 'photo-6'];
   let galleryRAF = null, galleryPaused = false;
 
   function openModal(k) {
@@ -245,11 +246,19 @@ document.addEventListener('DOMContentLoaded', () => {
   function cardScrollPos(id) {
     const heroH = document.getElementById('hero').offsetHeight;
     const cardSlot = window.innerHeight * 0.55 + 32; // 55vh card + 2rem margin
-    const secPad = 80; // cards-section padding-top
-    const map = { campus: 0, work: 1, life: 2 };
+    const map = { work: 0, campus: 1, life: 2 };
     if (id === 'hero') return 0;
-    if (id === 'contact') return heroH + secPad + cardSlot * 3;
-    return heroH + secPad + cardSlot * map[id] + 10;
+
+    // 动态测量 sec-title 高度+margin（响应式断点下会变化）
+    const secTitle = document.querySelector('.sec-title');
+    const titleH = secTitle
+      ? secTitle.offsetHeight + (parseFloat(getComputedStyle(secTitle).marginBottom) || 0)
+      : 112; // fallback: 2.5rem*1.6 + 3rem ≈ 112px
+
+    // 卡片 sticky top:80px, 自然文档位置 = heroH + 80(pad) + titleH + N*cardSlot
+    // 要让卡片 stuck 在 top:80px → scrollY = 自然位置 - 80 = heroH + titleH + N*cardSlot
+    if (id === 'contact') return heroH + 80 + cardSlot * 3;
+    return heroH + titleH + cardSlot * map[id];
   }
 
   function updateNav() {
@@ -277,6 +286,9 @@ document.addEventListener('DOMContentLoaded', () => {
     dot.addEventListener('click', e => {
       e.preventDefault();
       const id = dot.dataset.section;
+      // 重置目标卡片内部滚动位置
+      const card = document.getElementById(id);
+      if (card) card.scrollTop = 0;
       const target = cardScrollPos(id);
       window.scrollTo({ top: target, behavior: 'smooth' });
     });
@@ -320,33 +332,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 200);
   }
 
-  // ========== 气泡投票（+1 / −1 双按钮） ==========
+  // ========== 气泡 +1 投票 + 弹幕 ==========
   document.querySelectorAll('.bubble').forEach(b => {
-    const id = b.dataset.id;
     const plusBtn = b.querySelector('.bubble-vote b');
-    const minusBtn = b.querySelector('.bubble-vote i');
-    if (!plusBtn || !minusBtn) return;
+    if (!plusBtn) return;
 
-    const saved = parseInt(localStorage.getItem('vote_' + id)) || 0;
-    b.dataset.count = (parseInt(b.dataset.count) || 0) + saved;
-
-    function applyVote(delta) {
-      const cur = parseInt(b.dataset.count) || 0;
-      const sv  = parseInt(localStorage.getItem('vote_' + id)) || 0;
-      const newSv = sv + delta;
-      b.dataset.count = Math.max(0, cur + delta);
-      if (newSv === 0) localStorage.removeItem('vote_' + id);
-      else localStorage.setItem('vote_' + id, newSv);
+    function showToast() {
+      const rect = b.getBoundingClientRect();
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = '很有缘哦！';
+      toast.style.left = rect.left + rect.width/2 - 40 + 'px';
+      toast.style.top  = rect.top - 10 + 'px';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 1500);
     }
 
-    plusBtn.addEventListener('click', e => { e.stopPropagation(); applyVote(1); });
-    minusBtn.addEventListener('click', e => { e.stopPropagation(); applyVote(-1); });
+    plusBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const cur = parseInt(b.dataset.count) || 0;
+      b.dataset.count = cur + 1;
+      showToast();
+    });
   });
 
   // ========== 全局 ==========
   window.jump = id => {
+    // 重置目标卡片内部滚动位置
+    const card = document.getElementById(id);
+    if (card) card.scrollTop = 0;
     const target = cardScrollPos(id);
     window.scrollTo({ top: target, behavior: 'smooth' });
-  };
-  window.openResume = () => window.open('https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', '_blank');
+  };  window.openResume = () => window.open('assets/resume.pdf', '_blank');
 });
