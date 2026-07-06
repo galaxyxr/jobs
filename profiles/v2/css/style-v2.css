@@ -310,6 +310,9 @@ body::before {
   /* 统一卡片高度 */
   height: 55vh;
   overflow-y: auto;
+  /* Hide scrollbar — keep scroll functionality */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   /* sticky */
   position: sticky;
   top: 80px;
@@ -319,6 +322,11 @@ body::before {
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+/* Hide webkit scrollbar on cards */
+.stack-card::-webkit-scrollbar {
+  display: none;
 }
 
 /* ====== 左栏：标题 ====== */
@@ -509,7 +517,9 @@ body::before {
   cursor:pointer; transition:all .3s; padding:.5rem; line-height:1;
 }
 .modal-x:hover { color:var(--txt); transform:rotate(90deg); }
-.modal-body { max-height:70vh; overflow-y:auto; padding-right:.5rem; }
+.modal-body { max-height:70vh; overflow-y:auto; padding-right:.5rem; scrollbar-width:none; -ms-overflow-style:none; }
+/* Hide webkit scrollbar on modal */
+.modal-body::-webkit-scrollbar { display:none; }
 .modal-body img { width:100%; border-radius:12px; margin-bottom:1.5rem; }
 .modal-body h3 { font-size:1.5rem; color:var(--txt); margin-bottom:.5rem; }
 .modal-body p { color:var(--txt2); line-height:1.8; margin-bottom:.8rem; }
